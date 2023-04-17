@@ -38,10 +38,10 @@ public class DataProcess {
 
     public String getResult(Map<String, Map<Double,Integer>> map){
         StringBuilder sb = new StringBuilder();
-        map.forEach((name, prices) -> {
+        map.forEach((name, innerMap) -> {
             StringBuilder sb2 = new StringBuilder();
-            int count = prices.values().stream().mapToInt(Integer::intValue).sum();
-            prices.forEach((price, occurrences) -> sb2.append(String.format("Price: %6.2f\t\tseen:%2d times\n-------------\t\t-------------\n", price, occurrences)));
+            int count = innerMap.values().stream().mapToInt(Integer::intValue).sum();
+            innerMap.forEach((price, occurrences) -> sb2.append(String.format("Price: %6.2f\t\tseen:%2d times\n-------------\t\t-------------\n", price, occurrences)));
             sb.append(String.format("\nName: %7s\t\tseen:%2d times\n=============\t\t=============\n", name, count)).append(sb2);
         });
         sb.append(String.format("\nErrors:       \t\tseen:%2d times\n", errors));
