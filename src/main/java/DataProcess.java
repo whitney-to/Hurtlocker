@@ -5,11 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataProcess {
-
      private final String[] regexList = {"(?i)(?<=name:)[^;]+", "(?i)(?<=price:)[^;]+", "(?i)(?<=type:)[^\\^;%*@!]+", "(?i)(?<=expiration:)[^#]+"};
      private Integer errors = 0;
-
-     private Map<String, Map<Double,Integer>> map = new LinkedHashMap<>();
+     private Map<String, Map<Double,Integer>> map = new HashMap<>();
 
     public String process(String data){
         Matcher m  = Pattern.compile(".+?(?=##)").matcher(data);
@@ -39,6 +37,16 @@ public class DataProcess {
     }
 
     public String getResult(Map<String, Map<Double,Integer>> map){
+        StringBuilder sb = new StringBuilder();
+        map.forEach((name, prices) -> {
+            StringBuilder sb2 = new StringBuilder();
+            int count = prices.values().stream().mapToInt(Integer::intValue).sum();
+            prices.forEach((price, occurrences) -> sb2.append(String.format("Price: %6.2f\t\tseen:%2d times\n-------------\t\t-------------\n", price, occurrences)));
+            sb.append(String.format("\nName: %7s\t\tseen:%2d times\n=============\t\t=============\n", name, count)).append(sb2);
+        });
+        sb.append(String.format("\nErrors:       \t\tseen:%2d times\n", errors));
+        return sb.toString();
+
 //        StringBuilder sb = new StringBuilder();
 //        for(Map.Entry<String,Map<Double,Integer>> eachItem : map.entrySet()){
 //            StringBuilder sb2 = new StringBuilder();
@@ -52,15 +60,5 @@ public class DataProcess {
 //        }
 //        sb.append(String.format("\nErrors:       \t\tseen:%2d times\n",errors));
 //        return sb.toString();
-
-        StringBuilder sb = new StringBuilder();
-        map.forEach((name, prices) -> {
-            StringBuilder sb2 = new StringBuilder();
-            int count = prices.values().stream().mapToInt(Integer::intValue).sum();
-            prices.forEach((price, occurrences) -> sb2.append(String.format("Price: %6.2f\t\tseen:%2d times\n-------------\t\t-------------\n", price, occurrences)));
-            sb.append(String.format("\nName: %7s\t\tseen:%2d times\n=============\t\t=============\n", name, count)).append(sb2);
-        });
-        sb.append(String.format("\nErrors:       \t\tseen:%2d times\n", errors));
-        return sb.toString();
     }
 }

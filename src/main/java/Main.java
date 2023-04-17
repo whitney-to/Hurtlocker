@@ -14,4 +14,5 @@ public class Main {
         String output = (new Main()).readRawDataToString("RawData.txt");
         System.out.println((new DataProcess()).process(output));
     }
+
 }
