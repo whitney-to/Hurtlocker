@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class DataProcess {
      private final String[] regexList = {"(?i)(?<=name:)[^;]+", "(?i)(?<=price:)[^;]+", "(?i)(?<=type:)[^\\^;%*@!]+", "(?i)(?<=expiration:)[^#]+"};
      private Integer errors = 0;
-     private Map<String, Map<Double,Integer>> map = new HashMap<>();
+     private Map<String, Map<Double,Integer>> map = new LinkedHashMap<>();
 
     public String process(String data){
         Matcher m  = Pattern.compile(".+?(?=##)").matcher(data);
@@ -16,6 +16,8 @@ public class DataProcess {
                 String name = fixName(findMatch(regexList[0],m.group()));
                 map.putIfAbsent(name,new HashMap<>());
                 map.put(name,addPrice(map.get(name),Double.parseDouble(findMatch(regexList[1],m.group()))));
+                findMatch(regexList[2],m.group());// checking errors for type
+                findMatch(regexList[3],m.group());// checking errors for expiration
             } catch (NullPointerException e){
                 errors++;
             }
