@@ -1,7 +1,4 @@
 import org.apache.commons.io.IOUtils;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Main {
     public String readRawDataToString(String fileName) throws Exception{
